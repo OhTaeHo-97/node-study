@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>{{title}}</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="/main.css">
+</head>
+<body>
+<div class="container">
+  <div class="profile-wrap">
+    <div class="profile">
+<!--      user와 user.id가 있다 -> 로그인한 상태를 의미-->
+<!--      로그인한 상태에서는 팔로워수, 팔로잉수, 프로필 화면, 로그아웃 등을 보여줌-->
+      {% if user and user.id %}
+      <div class="user-name">{{'안녕하세요! ' + user.nick + '님'}}</div>
+      <div class="half">
+        <div>팔로잉</div>
+        <div class="count following-count">{{followingCount}}</div>
+      </div>
+      <div class="half">
+        <div>팔로워</div>
+        <div class="count follower-count">{{followerCount}}</div>
+      </div>
+      <input id="my-id" type="hidden" value="{{user.id}}">
+      <a id="my-profile" href="/profile" class="btn">내 프로필</a>
+      <a id="logout" href="/auth/logout" class="btn">로그아웃</a>
+<!--      로그인을 안 한 상태에서는 로그인 화면을 보여줌-->
+      {% else %}
+      <form id="login-form" action="/auth/login" method="post">
+        <div class="input-group">
+          <label for="email">이메일</label>
+          <input id="email" type="email" name="email" required autofocus>
+        </div>
+        <div class="input-group">
+          <label for="password">비밀번호</label>
+          <input id="password" type="password" name="password" required>
+        </div>
+        <a id="join" href="/join" class="btn">회원가입</a>
+        <button id="login" type="submit" class="btn">로그인</button>
+        <a id="kakao" href="/auth/kakao" class="btn">카카오톡</a>
+      </form>
+      {% endif %}
+    </div>
+    <footer>
+      Made by&nbsp;
+      <a href="https://www.zerocho.com" target="_blank">ZeroCho</a>
+    </footer>
+  </div>
+<!--  레이아웃이다보니 이 부분에 다른 기본적인 화면들이 들어감-->
+<!--  - 메인 페이지면 트윗 화면들이 들어갈 것이고, 프로필이면 프로필 화면이 들어가고, 회원가입이면 여기에 회원가입 화면이 들어감-->
+  {% block content %}
+  {% endblock %}
+</div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+  // 혹시나 주소가 localhost:8080?loginError=에러메시지 이렇게 될 수 있음
+  // 그러면 에러 메시지를 경고창(alert)으로 띄워주는 기능
+  window.onload = () => {
+    if (new URL(location.href).searchParams.get('error')) {
+      alert(new URL(location.href).searchParams.get('error'));
+    }
+  };
+</script>
+{% block script %}
+{% endblock %}
+</body>
+</html>
