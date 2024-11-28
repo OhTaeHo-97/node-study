@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GIF 채팅방</title>
+</head>
+<body>
+    <div>F12를 눌러 console 탭과 network 탭을 확인하세요.</div>
+    <script>
+        // 브라우저에서는 웹 소켓을 기본적으로 지원하기 때문에 ws 모듈을 설치할 필요가 없음!
+        // 프로토콜이 ws이기 때문에 ws://localhost:8085
+        //  - 포트는 같이 쓸 수 있고 프로토콜만 바뀌면 웹 소켓 연결을 받을 수 있게 된다!
+        const webSocket = new WebSocket("ws://localhost:8085");
+        // 클라이언트에서도 서버와 대응되는 이벤트 리스너들이 있음
+        //  - 다만 모양이 좀 다름
+        webSocket.onopen = function () {
+            console.log('서버와 웹 소켓 연결 성공');
+        }
+        // webSocket.onmessage를 통해 서버로부터 메시지를 받음
+        webSocket.onmessage = function (event) {
+            console.log(event.data);
+            // webSocket.send()를 통해 메시지르르 보냄
+            webSocket.send('클라이언트에서 서버로 답장을 보냅니다');
+        }
+    </script>
+</body>
+</html>

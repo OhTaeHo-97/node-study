@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GIF 채팅방</title>
+</head>
+<body>
+<div>F12를 눌러 console 탭과 network 탭을 확인하세요.</div>
+<!--이 script까지 있어야 io라는 값을 사용할 수 있게 됨-->
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  // Socket.IO에서는 http로 연결함
+  //  - 처음에는 폴링 방식으로 시도하기 때문에 처음에는 http 요청이었다가 나중에 웹 소켓으로 전환됨
+  //  - 그래서 우리가 웹 소켓 연결할 때 ws로 연결하지 않고 http로 먼저 연결하는 것!
+  const socket = io.connect("http://localhost:8085", {
+    // path를 서버에서 설정한 path와 똑같이 입력해줘야 함!
+    path: '/socket.io',
+    // 폴링 방식을 아예 시도하지 않았으면 좋겠다면 이렇게 하면 됨
+    transports: ['websocket'],
+  });
+  // 서버에서 news를 emit했으니까
+  socket.on('news', (data) => {
+    console.log(data);
+    // reply라는 이름으로 'Hello Node.JS'를 보냄
+    // reply를 emit 헀으니 서버쪽에서 받을 때는 socket.on('reply')로 받으면 됨
+    socket.emit('reply', 'Hello Node.JS');
+  })
+</script>
+</body>
+</html>
